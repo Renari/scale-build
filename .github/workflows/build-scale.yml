@@ -1,0 +1,35 @@
+name: Build Scale
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:12
+      options: --privileged
+    steps:
+      - name: Install dependencies
+        run: |
+          apt update
+          apt install -y build-essential debootstrap git python3-pip python3-venv squashfs-tools unzip libjson-perl rsync libarchive-tools
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run Build
+        run: |
+          git config --global --add safe.directory $PWD
+          make
+
+      - name: Extract Artifact File
+        run: |
+          mkdir -p ./nvidia-driver
+          unsquashfs -dest ./nvidia-driver -f ./tmp/update/rootfs.squashfs usr/share/truenas/sysext-extensions/nvidia.raw
+
+      - name: Upload nvidia.raw Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: nvidia-raw
+          path: ./nvidia-driver/usr/share/truenas/sysext-extensions/nvidia.raw
