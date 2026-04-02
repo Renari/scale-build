@@ -52,6 +52,15 @@ jobs:
       image: debian:12
       options: --privileged
     steps:
+      - name: Add swap space
+        run: |
+          fallocate -l 12G /swapfile
+          chmod 600 /swapfile
+          mkswap /swapfile
+          swapon /swapfile
+          swapon --show
+          free -h
+
       - name: Install dependencies
         run: |
           apt update
