@@ -59,7 +59,7 @@ jobs:
           losetup /dev/loop0 /tmp/swapfile
           mkswap /dev/loop0
           swapon /dev/loop0
-          free -h
+          swapon --show
 
       - name: Install dependencies
         run: |
