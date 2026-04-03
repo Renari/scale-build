@@ -54,11 +54,10 @@ jobs:
     steps:
       - name: Add swap space
         run: |
-          fallocate -l 12G /swapfile
-          chmod 600 /swapfile
-          mkswap /swapfile
-          swapon /swapfile
-          swapon --show
+          dd if=/dev/zero of=/mnt/swapfile bs=1M count=12288
+          chmod 600 /mnt/swapfile
+          mkswap /mnt/swapfile
+          swapon /mnt/swapfile
           free -h
 
       - name: Install dependencies
