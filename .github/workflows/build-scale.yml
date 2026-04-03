@@ -54,10 +54,11 @@ jobs:
     steps:
       - name: Add swap space
         run: |
-          dd if=/dev/zero of=/mnt/swapfile bs=1M count=12288
-          chmod 600 /mnt/swapfile
-          mkswap /mnt/swapfile
-          swapon /mnt/swapfile
+          dd if=/dev/zero of=/tmp/swapfile bs=1M count=12288
+          chmod 600 /tmp/swapfile
+          losetup /dev/loop0 /tmp/swapfile
+          mkswap /dev/loop0
+          swapon /dev/loop0
           free -h
 
       - name: Install dependencies
